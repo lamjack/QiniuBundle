@@ -1,4 +1,4 @@
-# QiniuBundle
+QiniuBundle
 ===================
 A symfony2 bundle to help you use Qiniu cloud storage.
 Provides a simple Symfony 2 Bundle to Wrap the QINIU PHP SDK - https://github.com/hfcorriez/php-qiniu
