@@ -21,8 +21,15 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+/**
+ * Class WizQiniuExtension
+ * @package Wiz\QiniuBundle\DependencyInjection
+ */
 class WizQiniuExtension extends Extension
 {
+    /**
+     * {@inheritDoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -37,6 +44,8 @@ class WizQiniuExtension extends Extension
         $secretKey = $accessor->getValue($config, '[secret_key]');
 
         if ($accessKey && $secretKey) {
+            $definition = new Definition('Wiz\QiniuBundle\Client', array($accessKey, $secretKey));
+            $container->setDefinition('wiz_qiniu.client', $definition);
         }
     }
 }
