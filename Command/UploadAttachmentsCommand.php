@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
+use Wiz\QiniuBundle\Exception\RuntimeException;
 
 /**
  * Class UploadAttachmentsCommand
@@ -49,7 +50,8 @@ class UploadAttachmentsCommand extends ContainerAwareCommand
         $fs = $this->getContainer()->get('filesystem');
         $webPath = realpath($this->getContainer()->get('kernel')->getRootDir() . '/../web');
         $uploadPath = $webPath . '/uploads';
-        $client = $this->getContainer()->get('wiz_qiniu.client')->getBucket($input->getArgument('bucket'));
+        $client = $this->getContainer()->get('wiz_qiniu.client');
+        $bucket = $input->getArgument('bucket');
 
         if (!$fs->exists($uploadPath))
             throw new \RuntimeException(sprintf('The upload folder is not exist'));
@@ -59,18 +61,16 @@ class UploadAttachmentsCommand extends ContainerAwareCommand
             /** @var \SplFileInfo $file */
             if ($file->isFile()) {
                 $key = str_replace($webPath, '', $file->getRealPath());
-                $exifResult = $client->exif($key);
-                if ($exifResult->response->code === 404) {
-                    $uploadResult = $client->upload($file->getRealPath(), $key);
-                    if (null === $uploadResult->error) {
-                        $output->writeln(sprintf('<info>%s success</info>', $key));
-                    } else {
-                        throw new \RuntimeException($exifResult->error);
-                    }
-                } elseif ($exifResult->error !== null) {
-                    throw new \RuntimeException($exifResult->error);
-                } else {
+                try {
+                    $client->stat($bucket, $key);
                     $output->writeln(sprintf('<comment>%s exist</comment>', $key));
+                    continue;
+                } catch (RuntimeException $e) {
+                    switch ($e->getCode()) {
+                        case 612:
+                            $client->uploadFile($bucket, $file->getRealPath(), $key);
+                            $output->writeln(sprintf('<info>%s success</info>', $key));
+                    }
                 }
             }
         }
