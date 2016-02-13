@@ -77,11 +77,12 @@ class Client
     public function uploadFile($bucket, $filePath, $key)
     {
         $mgr = $this->getUploadManager($bucket);
+        /** @var Error $err */
         list($ret, $err) = $mgr->putFile($this->getUploadToken($bucket), $key, $filePath);
         if (null === $err) {
             return $ret;
         } else {
-            throw new RuntimeException($err);
+            throw new RuntimeException($err->message(), $err->code());
         }
     }
 

@@ -14,8 +14,6 @@
  */
 namespace Wiz\QiniuBundle\Exception;
 
-use RuntimeException as BaseException;
-
-final class RuntimeException extends BaseException
+final class RuntimeException extends \Exception
 {
 }
