@@ -28,7 +28,7 @@ use Wiz\QiniuBundle\Exception\RuntimeException;
 class UploadAttachmentsCommand extends ContainerAwareCommand
 {
     /**
-     *
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -39,10 +39,7 @@ class UploadAttachmentsCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     *
-     * @return int
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -61,6 +58,10 @@ class UploadAttachmentsCommand extends ContainerAwareCommand
             /** @var \SplFileInfo $file */
             if ($file->isFile()) {
                 $key = str_replace($webPath, '', $file->getRealPath());
+                // 删除上传目录的前置/,避免出现两次反斜杠
+                if (strpos($key, '/') === 0) {
+                    $key = substr($key, 1);
+                }
                 try {
                     $client->stat($bucket, $key);
                     $output->writeln(sprintf('<comment>%s exist</comment>', $key));
@@ -70,6 +71,7 @@ class UploadAttachmentsCommand extends ContainerAwareCommand
                         case 612:
                             $client->uploadFile($bucket, $file->getRealPath(), $key);
                             $output->writeln(sprintf('<info>%s success</info>', $key));
+                            break;
                     }
                 }
             }

@@ -41,6 +41,9 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('secret_key')
                     ->defaultNull()
                 ->end()
+                ->scalarNode('domain')
+                    ->defaultNull()
+                ->end()
             ->end()
         ;
 

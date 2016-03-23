@@ -1,1 +1,10 @@
 services:
+    wiz_qiniu.helper.qiniu:
+        class: Wiz\QiniuBundle\Helper\QiniuHelper
+        arguments: [ "%wiz_qiniu.domain%" ]
+
+    wiz_qiniu.twig_extension.common:
+        class: Wiz\QiniuBundle\Twig\Extension\CommonTwigExtension
+        arguments: [ "@wiz_qiniu.helper.qiniu" ]
+        tags:
+            - { name: twig.extension }

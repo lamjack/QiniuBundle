@@ -42,10 +42,13 @@ class WizQiniuExtension extends Extension
 
         $accessKey = $accessor->getValue($config, '[access_key]');
         $secretKey = $accessor->getValue($config, '[secret_key]');
+        $domain = $accessor->getValue($config, '[domain]');
 
         if ($accessKey && $secretKey) {
             $definition = new Definition('Wiz\QiniuBundle\Client', array($accessKey, $secretKey));
             $container->setDefinition('wiz_qiniu.client', $definition);
         }
+
+        $container->setParameter('wiz_qiniu.domain', $domain);
     }
 }
