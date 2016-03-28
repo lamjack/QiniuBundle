@@ -49,6 +49,6 @@ class WizQiniuExtension extends Extension
             $container->setDefinition('wiz_qiniu.client', $definition);
         }
 
-        $container->setParameter('wiz_qiniu.domain', $domain);
+        $container->setParameter('wiz_qiniu.domain', $domain === null ? '' : $domain);
     }
 }

@@ -30,7 +30,7 @@ class QiniuHelper
      *
      * @param string $domian
      */
-    public function __construct(string $domian = '')
+    public function __construct(string $domian)
     {
         $this->domian = $domian;
     }
