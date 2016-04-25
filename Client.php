@@ -118,7 +118,7 @@ class Client
     /**
      * @return Auth
      */
-    protected function getAuth()
+    public function getAuth()
     {
         if (null === $this->_auth)
             $this->_auth = new Auth($this->accessKey, $this->secretKey);
