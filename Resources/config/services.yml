@@ -1,10 +1,11 @@
 services:
-    wiz_qiniu.helper.qiniu:
-        class: Wiz\QiniuBundle\Helper\QiniuHelper
-        arguments: [ "%wiz_qiniu.domain%" ]
+    wiz_qiniu.service.common:
+        class: Wiz\QiniuBundle\Services\CommonService
+        calls:
+            - [ setContainer, [ '@service_container' ] ]
 
     wiz_qiniu.twig_extension.common:
         class: Wiz\QiniuBundle\Twig\Extension\CommonTwigExtension
-        arguments: [ "@wiz_qiniu.helper.qiniu" ]
+        arguments: [ "@wiz_qiniu.service.common" ]
         tags:
             - { name: twig.extension }

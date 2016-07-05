@@ -13,12 +13,14 @@
  * @version
  */
 namespace Wiz\QiniuBundle\Twig\Extension;
-use Wiz\QiniuBundle\Helper\QiniuHelper;
+
+use Wiz\QiniuBundle\Services\CommonService;
 
 /**
  * Class CommonTwigExtension
  * @package Wiz\QiniuBundle\Twig\Extension
  */
+
 /**
  * Class CommonTwigExtension
  * @package Wiz\QiniuBundle\Twig\Extension
@@ -26,18 +28,18 @@ use Wiz\QiniuBundle\Helper\QiniuHelper;
 class CommonTwigExtension extends \Twig_Extension
 {
     /**
-     * @var QiniuHelper
+     * @var CommonService
      */
-    private $helper;
+    private $service;
 
     /**
      * CommonTwigExtension constructor.
      *
-     * @param QiniuHelper $helper
+     * @param CommonService $service
      */
-    public function __construct(QiniuHelper $helper)
+    public function __construct(CommonService $service)
     {
-        $this->helper = $helper;
+        $this->service = $service;
     }
 
     /**
@@ -46,7 +48,7 @@ class CommonTwigExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('qiniu_attachment', array($this->helper, 'getFileUrl'), ['is_safe' => ['html']])
+            new \Twig_SimpleFilter('qiniu_attachment', array($this->service, 'getResourceUri'), ['is_safe' => ['html']])
         ];
     }
 
